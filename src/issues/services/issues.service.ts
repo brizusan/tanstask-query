@@ -6,7 +6,7 @@ import { IssueResponse, State } from "../interfaces";
 type Props = {
   state: State;
   selectedLabels: string[];
-  page: number;
+  page?: number;
 };
 
 export const getIssues = async ({
@@ -18,9 +18,8 @@ export const getIssues = async ({
   if (selectedLabels.length > 0)
     params.append("labels", selectedLabels.join(","));
 
-  params.append("per_page", "6");
-  console.log(page);
-  params.append("page", page.toString());
+  params.append("per_page", "5");
+  if (page) params.append("page", page.toString());
 
   try {
     const url = `/issues`;
