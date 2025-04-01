@@ -1,12 +1,24 @@
 import { isAxiosError } from "axios";
 import { githubApi } from "../../api/github.api";
 import { sleep } from "../../helpers/sleep";
-import { IssueResponse } from "../interfaces";
+import { IssueResponse, State } from "../interfaces";
 
-export const getIssues = async (): Promise<IssueResponse[]> => {
+type Props = {
+  state: State;
+  selectedLabels: string[];
+};
+
+export const getIssues = async ({
+  state,
+  selectedLabels,
+}: Props): Promise<IssueResponse[]> => {
+  const params = new URLSearchParams({ state });
+  if (selectedLabels.length > 0)
+    params.append("labels", selectedLabels.join(","));
+
   try {
     const url = `/issues?per_page=10`;
-    const { data } = await githubApi.get<IssueResponse[]>(url);
+    const { data } = await githubApi.get<IssueResponse[]>(url, { params });
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

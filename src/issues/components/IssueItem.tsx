@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { FiCheckCircle, FiInfo, FiMessageSquare } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { timeSince } from "../../helpers/time";
 import { IssueResponse, State } from "../interfaces";
 
 type IssueItemProps = {
@@ -13,7 +14,6 @@ export const IssueItem = ({ issue }: IssueItemProps) => {
   const queryClient = useQueryClient();
 
   // const prefetchData = () => {
-  //   console.log("prefetching");
   //   queryClient.prefetchQuery({
   //     queryKey: ["issue", issue.number],
   //     queryFn: () => getIssue(issue.number),
@@ -47,9 +47,21 @@ export const IssueItem = ({ issue }: IssueItemProps) => {
           {issue.title}
         </button>
         <span className="text-gray-500">
-          #{issue.id.toString().slice(0, 6)} opened days ago by{" "}
+          #{issue.id.toString().slice(0, 6)} opened{" "}
+          {timeSince(issue.created_at.toString())} by{" "}
           <span className="font-bold">{issue.user.login}</span>
         </span>
+
+        <div className="flex flex-wrap gap-1.5">
+          {issue.labels.map((label) => (
+            <span
+              key={label.id}
+              className="px-2 py-1 bg-gray-800 text-white rounded-full text-xs font-semibold"
+            >
+              {label.name}
+            </span>
+          ))}
+        </div>
       </div>
 
       <img

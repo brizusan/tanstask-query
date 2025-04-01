@@ -1,7 +1,15 @@
 import { LoadinSpinner } from "../../components";
 import { useLabels } from "../hooks/useLabels";
 
-export const LabelPicker = () => {
+type LabelPickerProps = {
+  handleSelectLabels: (label: string) => void;
+  selectedLabels: string[];
+};
+
+export const LabelPicker = ({
+  handleSelectLabels,
+  selectedLabels,
+}: LabelPickerProps) => {
   const { data, isLoading, error } = useLabels();
 
   if (isLoading) {
@@ -21,7 +29,10 @@ export const LabelPicker = () => {
           {data.map((label) => (
             <span
               key={label.url}
-              className="animate-fadeIn px-2 py-1 border rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer"
+              onClick={() => handleSelectLabels(label.name)}
+              className={`${
+                selectedLabels.includes(label.name) ? "selected-label" : ""
+              } animate-fadeIn px-2 py-1 border rounded-full text-xs font-semibold hover:bg-slate-800 cursor-pointer`}
               style={{
                 border: `1px solid ${label.color}`,
                 color: `#${label.color}`,
