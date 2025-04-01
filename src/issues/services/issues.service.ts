@@ -6,18 +6,24 @@ import { IssueResponse, State } from "../interfaces";
 type Props = {
   state: State;
   selectedLabels: string[];
+  page: number;
 };
 
 export const getIssues = async ({
   state,
   selectedLabels,
+  page,
 }: Props): Promise<IssueResponse[]> => {
   const params = new URLSearchParams({ state });
   if (selectedLabels.length > 0)
     params.append("labels", selectedLabels.join(","));
 
+  params.append("per_page", "6");
+  console.log(page);
+  params.append("page", page.toString());
+
   try {
-    const url = `/issues?per_page=10`;
+    const url = `/issues`;
     const { data } = await githubApi.get<IssueResponse[]>(url, { params });
     return data;
   } catch (error) {
